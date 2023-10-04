@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full bg-black border border-white rounded-3xl px-12 py-8 flex justify-between items-center"
+    class="w-full bg-black border border-[#e5d2c4] rounded-3xl px-12 py-8 flex justify-between items-center"
   >
     <div>
       <div class="text-3xl font-[900]">ToDo Done</div>
