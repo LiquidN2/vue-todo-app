@@ -5,7 +5,7 @@ import BaseFooter from './BaseFooter.vue'
 
 <template>
   <div
-    class="w-[1200px] h-[800px] flex flex-col justify-center items-center bg-black text-[#e5d2c4] rounded-3xl"
+    class="w-[1200px] h-[900px] flex flex-col justify-center items-center bg-black text-[#e5d2c4] rounded-3xl"
   >
     <BaseHeader />
     <slot></slot>

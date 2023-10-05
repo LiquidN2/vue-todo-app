@@ -7,7 +7,13 @@ const { tasks } = useTaskStore()
 
 <template>
   <div class="w-full h-[300px] mb-5 overflow-auto">
-    <TaskItem v-for="{ id, text } in tasks" :key="id" :text="text" :id="id" />
+    <TaskItem
+      v-for="{ id, text, isCompleted } in tasks"
+      :key="id"
+      :text="text"
+      :id="id"
+      :isCompleted="isCompleted"
+    />
   </div>
 </template>
 

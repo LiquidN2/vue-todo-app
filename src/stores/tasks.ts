@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import ShortUniqueId from 'short-unique-id'
 
@@ -13,6 +13,31 @@ interface Task extends UpdatableTaskData {
 
 export const useTaskStore = defineStore('tasks', () => {
   const tasks = ref<Task[]>([])
+
+  const totalTasks = computed(() => tasks.value.length)
+
+  const completedTasks = computed(() => {
+    // return 0
+    if (tasks.value.length === 0) return 0
+    return tasks.value.reduce(
+      (accumulator, currentValue) => accumulator + (currentValue.isCompleted ? 1 : 0),
+      0
+    )
+  })
+
+  const message = computed(() =>
+    totalTasks.value && totalTasks.value === completedTasks.value
+      ? 'Congratulations!'
+      : 'Keep it up!'
+  )
+
+  function fetchSavedTasks() {
+    tasks.value = JSON.parse(localStorage.getItem('tasks') || '[]')
+  }
+
+  function saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(tasks.value))
+  }
 
   function addTask(text: string): void {
     if (!text) return
@@ -32,11 +57,21 @@ export const useTaskStore = defineStore('tasks', () => {
   }
 
   function updateTask(id: string, data: Partial<UpdatableTaskData>): void {
+    console.log('updating task')
     if (!id || tasks.value.length === 0) return
     const index = findTaskIndexById(id)
-    if (!index) return
     tasks.value[index] = { ...tasks.value[index], ...data }
   }
 
-  return { tasks, addTask, deleteTask, updateTask }
+  return {
+    tasks,
+    totalTasks,
+    completedTasks,
+    message,
+    fetchSavedTasks,
+    saveTasks,
+    addTask,
+    deleteTask,
+    updateTask
+  }
 })
