@@ -17,7 +17,7 @@ function handleEdit() {
 
 onClickOutside(inputRef, () => {
   inputDisabled.value = true
-  updateTask(props.id, props.text)
+  updateTask(props.id, { text: inputValue.value })
 })
 </script>
 

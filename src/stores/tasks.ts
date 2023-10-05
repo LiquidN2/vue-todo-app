@@ -2,9 +2,13 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import ShortUniqueId from 'short-unique-id'
 
-interface Task {
-  id: string
+interface UpdatableTaskData {
   text: string
+  isCompleted: boolean
+}
+
+interface Task extends UpdatableTaskData {
+  id: string
 }
 
 export const useTaskStore = defineStore('tasks', () => {
@@ -13,32 +17,25 @@ export const useTaskStore = defineStore('tasks', () => {
   function addTask(text: string): void {
     if (!text) return
     const { randomUUID } = new ShortUniqueId({ length: 10 })
-    tasks.value.push({ id: randomUUID(), text })
+    tasks.value.push({ id: randomUUID(), text, isCompleted: false })
   }
 
-  function findTaskIndexById(id: string): number | null {
-    if (!id) return null
-    const index = tasks.value.findIndex((task) => task.id === id)
-    return index >= 0 ? index : null
+  function findTaskIndexById(id: string) {
+    return tasks.value.findIndex((task) => task.id === id)
   }
-
-  // function findTaskById(id: string): Task | null {
-  //   const index = findTaskIndexById(id)
-  //   return !index ? null : tasks.value[index]
-  // }
 
   function deleteTask(id: string): void {
     if (!id || tasks.value.length === 0) return
+    console.log(`deleting task ${id}`)
     const index = findTaskIndexById(id)
-    if (!index) return
     tasks.value.splice(index, 1)
   }
 
-  function updateTask(id: string, text: string): void {
-    if (!id || !text || tasks.value.length === 0) return
+  function updateTask(id: string, data: Partial<UpdatableTaskData>): void {
+    if (!id || tasks.value.length === 0) return
     const index = findTaskIndexById(id)
     if (!index) return
-    tasks.value[index].text = text
+    tasks.value[index] = { ...tasks.value[index], ...data }
   }
 
   return { tasks, addTask, deleteTask, updateTask }
